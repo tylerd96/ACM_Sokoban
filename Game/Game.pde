@@ -1,17 +1,19 @@
 Render levelDrawer;
-int levelIndex;
+int levelIndex, moveLength;
 String playerName;
 
 void setup() {
   size(displayWidth,displayHeight);
   print("hello world");
   playerName = "Circle.png";
-  levelIndex = 0;
+  levelIndex = 2;
   levelDrawer = new Render(levelIndex, playerName);
+  moveLength = levelDrawer.getMoveLength();
 }
 
 void draw () {
   background(255,0,0);
   levelDrawer.drawLevel();
+  
   
 }
