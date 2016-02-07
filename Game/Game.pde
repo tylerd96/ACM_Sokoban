@@ -1,5 +1,5 @@
 void setup() {
-  size(1800,1400);
+  size(displayWidth,displayHeight);
   print("hello world");
 }
 
