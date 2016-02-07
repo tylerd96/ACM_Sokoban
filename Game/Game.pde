@@ -1,6 +1,11 @@
+Render levelDrawer;
+int levelIndex;
+
 void setup() {
   size(displayWidth,displayHeight);
   print("hello world");
+  levelIndex = 0;
+  levelDrawer = new Render(levelIndex);
 }
 
 void draw () {
@@ -11,4 +16,5 @@ void draw () {
     fill(0,255,0);
     rect(100,100,100,100);
   }
+  levelDrawer.drawLevel();
 }

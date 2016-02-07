@@ -5,7 +5,7 @@ class Render {
   int imageSize; // same for x and y
   
   Render (int levelIndex) {
-    levelImage = loadImage("level" + levelIndex);
+    levelImage = loadImage("level" + levelIndex + ".png");
     imageSize = (int) (height * 0.7);
     imagePositionX = (width - imageSize) / 2;
     imagePositionY = (height - imageSize) / 2;
