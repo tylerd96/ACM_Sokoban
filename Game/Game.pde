@@ -9,6 +9,7 @@ void setup() {
   levelIndex = 2;
   levelDrawer = new Render(levelIndex, playerName);
   moveLength = levelDrawer.getMoveLength();
+  print(moveLength);
 }
 
 void draw () {
