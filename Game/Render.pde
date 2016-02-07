@@ -18,11 +18,15 @@ class Render {
     playerPositionY =(int)((height -imageSize)/2);
   }
   int getMoveLength() {
-    moveLength = (int)(levelImage.height/10);
-    return moveLength;
+    return playerSize;
   }
   void move (int num) {
-    playerPositionX+=moveLength;
+    int oldX = playerPositionX;
+    int newX = oldX+playerSize;
+    for(int i=0;i<10;i++) {
+      playerPositionX = (int)lerp(oldX, newX, i/10.0);
+      delay(100);
+    }
   }
   void drawLevel() {
     image(levelImage, imagePositionX, imagePositionY, imageSize, imageSize);

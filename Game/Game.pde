@@ -15,6 +15,7 @@ void setup() {
 void draw () {
   background(255,0,0);
   levelDrawer.drawLevel();
+  levelDrawer.move(moveLength);
   
   
 }
