@@ -14,12 +14,16 @@ class LevelData {
   
   boolean isOpen(int x, int y) {
     println("testing isOpen: " + x + ", " + y);
-    if (x < 0 || x > 10 || y < 0 || y > 10)
+    if (x < 0 || x > 9 || y < 0 || y > 9)
       return false;
-    return grid[x][y] == 0;
+    return grid[x][y] == 1;
   }
   
   boolean isBox(int x, int y) {
     return false;
+  }
+  
+  int getTile(int x, int y) {
+    return grid[x][y];
   }
 }

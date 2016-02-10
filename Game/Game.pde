@@ -1,7 +1,13 @@
-Render levelDrawer;
+//Render levelDrawer;
 int levelIndex, moveLength;
 String playerName;
+PImage playerImage;
 LevelData levelData;
+
+PImage[] tiles;
+int originX;
+int originY;
+int tileSize;
 
 int playerX = 2;
 int playerY = 2;
@@ -19,38 +25,64 @@ int frameCount = 0;
 
 void setup() {
   size(displayWidth,displayHeight);
+  tiles = new PImage[2];
+  for (int i = 0; i < 2; i++)
+    tiles[i] = loadImage("tile" + i + ".png");
   print("hello world");
   playerName = "Circle.png";
+  playerImage = loadImage(playerName);
   levelIndex = 2;
   
-  levelDrawer = new Render(levelIndex, playerName);
-  levelDrawer.playerPosition(playerX, playerY);
+  //levelDrawer = new Render(levelIndex, playerName);
+  //levelDrawer.playerPosition(playerX, playerY);
+  tileSize = (int) (height * 0.07);
+  originX = (int) (width * 0.5 - height * 0.35);
+  originY = (int) (height * 0.15);
   
-  moveLength = levelDrawer.getMoveLength();
-  print(moveLength);
+  //moveLength = levelDrawer.getMoveLength();
+  //print(moveLength);
   levelData = new LevelData();
+  background(255,0,0);
+  drawLevel();
+  drawPlayer();
+}
+
+void drawLevel() {
+  for (int row = 0; row < 10; row++) {
+    for (int column = 0; column < 10; column++) {
+      image(tiles[levelData.getTile(row, column)], originX + column * tileSize, originY + row * tileSize, tileSize, tileSize);
+    }
+  }
+}
+
+void drawTile(int x, int y) {
+  image(tiles[levelData.getTile(x, y)], originX + y * tileSize, originY + x * tileSize, tileSize, tileSize);
+}
+
+void drawPlayer() {
+  image(playerImage, originX + playerY * tileSize, originY + playerX * tileSize, tileSize, tileSize);
 }
 
 void draw () {
   frameCount++;
   println(frameCount);
-  background(255,0,0);
+  //background(255,0,0);
   //levelDrawer.drawLevel();
   //levelDrawer.move(moveLength);
   if (allowInput && keyPressed) { // player input
     //print(key);
     switch (key) {
       case MOVE_UP:
-        tryToMove(0, -1);
-        break;
-      case MOVE_DOWN:
-        tryToMove(0, 1);
-        break;
-      case MOVE_LEFT:
         tryToMove(-1, 0);
         break;
-      case MOVE_RIGHT:
+      case MOVE_DOWN:
         tryToMove(1, 0);
+        break;
+      case MOVE_LEFT:
+        tryToMove(0, -1);
+        break;
+      case MOVE_RIGHT:
+        tryToMove(0, 1);
         break;
     }
   }
@@ -72,8 +104,9 @@ void tryToMove(int addX, int addY) {
 
 void move(int addX, int addY, boolean isPushing) {
   // check for pulling
-  
   playerX += addX;
   playerY += addY;
-  levelDrawer.playerPosition(playerX, playerY);
+  drawPlayer();
+  drawTile(playerX - addX, playerY - addY);
+  //levelDrawer.playerPosition(playerX, playerY);
 }
