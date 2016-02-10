@@ -3,7 +3,7 @@ class Render {
   PImage playerImage;
   int imagePositionX;
   int imagePositionY;
-  int playerPositionX, playerPositionY, moveLength;
+  int playerPositionX, playerOriginX, playerPositionY, playerOriginY, moveLength;
   int imageSize; // same for x and y
   int playerSize;
   
@@ -14,8 +14,10 @@ class Render {
     playerSize = (int)(imageSize*.1);
     imagePositionX = (width - imageSize) / 2;
     imagePositionY = (height - imageSize) / 2;
-    playerPositionX = (int)((width-imageSize)/2);
-    playerPositionY =(int)((height -imageSize)/2);
+    playerOriginX = (int)((width-imageSize)/2);
+    playerOriginY = (int)((height -imageSize)/2);
+    playerPositionX = playerOriginX;
+    playerPositionY = playerOriginY;
   }
   int getMoveLength() {
     return playerSize;
@@ -31,6 +33,11 @@ class Render {
   void drawLevel() {
     image(levelImage, imagePositionX, imagePositionY, imageSize, imageSize);
     image(playerImage, playerPositionX, playerPositionY, playerSize, playerSize);
+  }
+  
+  void playerPosition(int toX, int toY) {
+    playerPositionX = playerOriginX + toX * playerSize;
+    playerPositionY = playerOriginY + toY * playerSize;
   }
   
 }
