@@ -1,1 +1,4 @@
-0 = open space
+These tile codes correspond to the CreateLevelImages.pde, not necessarily to the game itself.
+
+0 = wall
+1 = open space
