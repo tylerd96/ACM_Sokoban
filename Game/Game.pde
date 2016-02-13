@@ -1,4 +1,5 @@
 //Render levelDrawer;
+ArrayList<Box> boxes;
 int levelIndex, moveLength,lastMove;
 String playerName;
 PImage playerImage;
