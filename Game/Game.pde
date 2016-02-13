@@ -1,11 +1,11 @@
 //Render levelDrawer;
-ArrayList<Box> boxes;
 int levelIndex, moveLength,lastMove;
 String playerName;
 PImage playerImage;
 LevelData levelData;
 
 PImage[] tiles;
+PImage boxImage;
 int originX;
 int originY;
 int tileSize;
@@ -26,8 +26,9 @@ int frameCount = 0;
 
 void setup() {
   size(displayWidth,displayHeight);
-  tiles = new PImage[2];
-  for (int i = 0; i < 2; i++)
+  tiles = new PImage[3];
+  boxImage = loadImage("box.png");
+  for (int i = 0; i < 3; i++)
     tiles[i] = loadImage("tile" + i + ".png");
   print("hello world");
   playerName = "Circle.png";
@@ -52,6 +53,8 @@ void drawLevel() {
   for (int row = 0; row < 10; row++) {
     for (int column = 0; column < 10; column++) {
       image(tiles[levelData.getTile(row, column)], originX + column * tileSize, originY + row * tileSize, tileSize, tileSize);
+      if (levelData.isBox(row, column))
+        image(boxImage, originX + column * tileSize, originY + row * tileSize, tileSize, tileSize);
     }
   }
 }
@@ -66,7 +69,7 @@ void drawPlayer() {
 
 void draw () {
   frameCount++;
-  println(frameCount);
+  //println(frameCount);
   //background(255,0,0);
   //levelDrawer.drawLevel();
   //levelDrawer.move(moveLength);

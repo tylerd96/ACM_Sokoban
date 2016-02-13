@@ -1,16 +1,13 @@
 class LevelData {
-  byte[][] grid = {{0,0,1,1,0,0,0,1,1,0},
-                     {1,1,1,0,0,0,0,0,1,0},
-                     {0,0,1,1,0,0,0,1,1,0},
-                     {1,1,1,0,0,0,0,0,1,0},
-                     {1,1,1,0,0,0,0,0,1,0},
-                     {0,0,1,1,0,0,0,1,1,0},
-                     {0,0,1,1,0,0,0,1,1,0},
-                     {1,1,1,0,0,0,0,0,1,0},
-                     {1,1,1,0,0,0,0,0,1,0},
-                     {0,0,1,1,0,0,0,1,1,0}};
+  byte[][] grid = new byte[10][10];
+                     
+                     
+  ArrayList<Box> boxes = new ArrayList<Box>();
   
-  LevelData () {}
+  LevelData () {
+    boxes.add(new Box(3, 2));
+    boxes.add(new Box(8, 8));
+  }
   
   boolean isOpen(int x, int y) {
     println("testing isOpen: " + x + ", " + y);
@@ -20,6 +17,10 @@ class LevelData {
   }
   
   boolean isBox(int x, int y) {
+    for (int i = 0; i < boxes.size(); i++) {
+      if (boxes.get(i).xPosition == x && boxes.get(i).yPosition == y)
+        return true;
+    }
     return false;
   }
   
