@@ -1,4 +1,5 @@
 //Render levelDrawer;
+import java.io.FileNotFoundException;
 int levelIndex, moveLength,lastMove;
 String playerName;
 PImage playerImage;
@@ -50,6 +51,7 @@ void setup() {
 }
 
 void drawLevel() {
+  levelData.loadNewLevel();
   for (int row = 0; row < 10; row++) {
     for (int column = 0; column < 10; column++) {
       image(tiles[levelData.getTile(row, column)], originX + column * tileSize, originY + row * tileSize, tileSize, tileSize);
