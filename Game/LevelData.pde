@@ -1,5 +1,6 @@
 class LevelData {
-  byte[][] grid = new byte[10][10];
+  byte[][] currentLevel = new byte[10][10];
+  byte[][] backupLevel = new byte[10][10];
                      
                      
   ArrayList<Box> boxes = new ArrayList<Box>();
@@ -13,9 +14,17 @@ class LevelData {
     println("testing isOpen: " + x + ", " + y);
     if (x < 0 || x > 9 || y < 0 || y > 9)
       return false;
-    return grid[x][y] == 1;
+    return currentLevel[x][y] == 1;
   }
   
+  boolean isFinish(int x,int y) {
+    return currentLevel[x][y] == 2;
+  }
+  
+  void loadNewLevel() {
+    
+    
+  }
   boolean isBox(int x, int y) {
     for (int i = 0; i < boxes.size(); i++) {
       if (boxes.get(i).xPosition == x && boxes.get(i).yPosition == y)
@@ -25,6 +34,6 @@ class LevelData {
   }
   
   int getTile(int x, int y) {
-    return grid[x][y];
+    return currentLevel[x][y];
   }
 }

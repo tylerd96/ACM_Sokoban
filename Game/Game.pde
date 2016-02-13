@@ -73,6 +73,7 @@ void draw () {
   //background(255,0,0);
   //levelDrawer.drawLevel();
   //levelDrawer.move(moveLength);
+  
   if(millis()-lastMove>500){
     keyPressed();
   }
@@ -98,6 +99,9 @@ void move(int addX, int addY, boolean isPushing) {
   playerY += addY;
   drawPlayer();
   drawTile(playerX - addX, playerY - addY);
+  if(levelData.isFinish(playerX,playerY)) {
+    
+  }
   //levelDrawer.playerPosition(playerX, playerY);
 }
 void keyPressed() {
