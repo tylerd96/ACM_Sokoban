@@ -1,5 +1,5 @@
 //Render levelDrawer;
-int levelIndex, moveLength;
+int levelIndex, moveLength,lastMove;
 String playerName;
 PImage playerImage;
 LevelData levelData;
@@ -69,22 +69,8 @@ void draw () {
   //background(255,0,0);
   //levelDrawer.drawLevel();
   //levelDrawer.move(moveLength);
-  if (allowInput && keyPressed) { // player input
-    //print(key);
-    switch (key) {
-      case MOVE_UP:
-        tryToMove(-1, 0);
-        break;
-      case MOVE_DOWN:
-        tryToMove(1, 0);
-        break;
-      case MOVE_LEFT:
-        tryToMove(0, -1);
-        break;
-      case MOVE_RIGHT:
-        tryToMove(0, 1);
-        break;
-    }
+  if(millis()-lastMove>500){
+    keyPressed();
   }
   
 }
@@ -109,4 +95,24 @@ void move(int addX, int addY, boolean isPushing) {
   drawPlayer();
   drawTile(playerX - addX, playerY - addY);
   //levelDrawer.playerPosition(playerX, playerY);
+}
+void keyPressed() {
+ if (allowInput && keyPressed) { // player input
+    //print(key);
+    switch (key) {
+      case MOVE_UP:
+        tryToMove(-1, 0);
+        break;
+      case MOVE_DOWN:
+        tryToMove(1, 0);
+        break;
+      case MOVE_LEFT:
+        tryToMove(0, -1);
+        break;
+      case MOVE_RIGHT:
+        tryToMove(0, 1);
+        break;
+    }
+  } 
+  lastMove = millis();
 }
