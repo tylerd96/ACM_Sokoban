@@ -1,6 +1,6 @@
 //Render levelDrawer;
 import java.io.FileNotFoundException;
-int levelIndex, moveLength,lastMove;
+int moveLength,lastMove;
 String playerName;
 PImage playerImage;
 LevelData levelData;
@@ -20,6 +20,13 @@ final char MOVE_UP = 'w';
 final char MOVE_DOWN = 's';
 final char MOVE_LEFT = 'a';
 final char MOVE_RIGHT = 'd';
+final char NEXT = ' ';
+final char BACK = '\b';
+final char RESET_LEVEL = 'r';
+
+// game manager:
+int menuPage = 1; // 0 is in game, 1 is main menu, 2 is restart level?, 3 is level complete
+int levelIndex = -1;
 
 boolean allowInput = true; // we may need to set this to false during animations
 
@@ -31,10 +38,9 @@ void setup() {
   boxImage = loadImage("box.png");
   for (int i = 0; i < 3; i++)
     tiles[i] = loadImage("tile" + i + ".png");
-  print("hello world");
+  //print("hello world");
   playerName = "Circle.png";
   playerImage = loadImage(playerName);
-  levelIndex = 2;
   
   //levelDrawer = new Render(levelIndex, playerName);
   //levelDrawer.playerPosition(playerX, playerY);
@@ -45,13 +51,11 @@ void setup() {
   //moveLength = levelDrawer.getMoveLength();
   //print(moveLength);
   levelData = new LevelData();
-  background(255,0,0);
-  drawLevel();
-  drawPlayer();
+  drawMenu(1);
 }
 
 void drawLevel() {
-  levelData.loadNewLevel();
+  //levelData.loadNewLevel();
   for (int row = 0; row < 10; row++) {
     for (int column = 0; column < 10; column++) {
       image(tiles[levelData.getTile(row, column)], originX + column * tileSize, originY + row * tileSize, tileSize, tileSize);
@@ -61,8 +65,41 @@ void drawLevel() {
   }
 }
 
+void drawMenu(int drawPage) {
+  background(127, 127, 255);
+  textSize(height / 20);
+  switch (drawPage) {
+    case 0:
+      drawLevel();
+      drawPlayer();
+      fill(0, 0, 0);
+      text("Level " + (levelIndex + 1), 20, height / 20);
+      break;
+    case 1:
+      fill(0, 0, 0);
+      text("ACM Grid Game - Main Menu", (width - textWidth("ACM Grid Game - Main Menu")) / 2, height / 3);
+      text("New game: SPACE", (width - textWidth("New game: SPACE")) / 2, 2 * height / 3);
+      break;
+    case 2:
+      fill(0, 0, 0);
+      text("Reset level?", (width - textWidth("Reset level?")) / 2, height * 0.25);
+      text("Reset: SPACE", (width - textWidth("Reset: SPACE")) / 2, height * 0.5);
+      text("Cancel: BACKSPACE", (width - textWidth("Cancel: BACKSPACE")) / 2, height * 0.75);
+      break;
+    case 3:
+      text("Level complete!", (width - textWidth("Level complete!")) / 2, height / 3);
+      text("Next level: SPACE", (width - textWidth("Next level: SPACE")) / 2, 2 * height / 3);
+      break;
+  }
+  menuPage = drawPage;
+}
+
 void drawTile(int x, int y) {
   image(tiles[levelData.getTile(x, y)], originX + y * tileSize, originY + x * tileSize, tileSize, tileSize);
+}
+
+void drawBox(int x, int y) {
+  image(boxImage, originX + y * tileSize, originY + x * tileSize, tileSize, tileSize);
 }
 
 void drawPlayer() {
@@ -76,7 +113,7 @@ void draw () {
   //levelDrawer.drawLevel();
   //levelDrawer.move(moveLength);
   
-  if(millis()-lastMove>500){
+  if(menuPage == 0 && millis()-lastMove>500){
     keyPressed();
   }
   
@@ -84,45 +121,82 @@ void draw () {
 
 void tryToMove(int addX, int addY) {
   if (levelData.isOpen(playerX + addX, playerY + addY)) {
-    println("move there!");
-    move(addX, addY, false);
+    int boxThere = levelData.getBoxID(playerX + addX, playerY + addY);
+    if (boxThere == -1) { // no box in the way
+      move(addX, addY, -1);
+      println("normal move");
+    }
+    else if (levelData.isOpen(playerX + addX * 2, playerY + addY * 2) && !levelData.isBox(playerX + addX * 2, playerY + addY * 2)) { // box in the way, but it can be pushed
+      move(addX, addY, boxThere);
+      println("box pushing move");
+    }
+    else { // the box can't be pushed from this angle
+      println("can't move");
+    }
   }
-  else if (levelData.isBox(playerX + addX, playerY + addY) && levelData.isOpen(playerX + addX * 2, playerY + addY * 2)) {
-    println("push box and move");
-    move(addX, addY, true);
-  }
-  else
+  else // something in the way of the player moving
     println("can't move");
 }
 
-void move(int addX, int addY, boolean isPushing) {
+void move(int addX, int addY, int boxID) {
   // check for pulling
   playerX += addX;
   playerY += addY;
+  if (boxID != -1) {
+    levelData.moveBox(boxID, playerX + addX, playerY + addY);
+    drawBox(playerX + addX, playerY + addY);
+    drawTile(playerX, playerY);
+  }
   drawPlayer();
   drawTile(playerX - addX, playerY - addY);
   if(levelData.isFinish(playerX,playerY)) {
-    
+    drawMenu(3);
   }
   //levelDrawer.playerPosition(playerX, playerY);
 }
+
 void keyPressed() {
- if (allowInput && keyPressed) { // player input
-    //print(key);
-    switch (key) {
-      case MOVE_UP:
-        tryToMove(-1, 0);
-        break;
-      case MOVE_DOWN:
-        tryToMove(1, 0);
-        break;
-      case MOVE_LEFT:
-        tryToMove(0, -1);
-        break;
-      case MOVE_RIGHT:
-        tryToMove(0, 1);
-        break;
-    }
-  } 
-  lastMove = millis();
+  switch (menuPage) {
+    case 0:
+      if (allowInput && keyPressed) { // player input
+        //print(key);
+        switch (key) {
+          case MOVE_UP:
+            tryToMove(-1, 0);
+            break;
+          case MOVE_DOWN:
+            tryToMove(1, 0);
+            break;
+          case MOVE_LEFT:
+            tryToMove(0, -1);
+            break;
+          case MOVE_RIGHT:
+            tryToMove(0, 1);
+            break;
+          case RESET_LEVEL:
+            drawMenu(2);
+            break;
+        }
+      } 
+      lastMove = millis();
+      break;
+    case 1:
+    // fall through
+    case 3:
+      if (key == NEXT) {
+        println("load");
+        levelData.loadNewLevel();
+        levelIndex++;
+        drawMenu(0);
+      }
+      break;
+    case 2:
+      if (key == NEXT) {
+        levelData.resetLevel();
+        drawMenu(0);
+      } else if (key == BACK) {
+        drawMenu(0);
+      }
+      break;
+  }
 }
