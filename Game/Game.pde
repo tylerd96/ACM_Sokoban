@@ -30,10 +30,9 @@ int levelIndex = -1;
 
 boolean allowInput = true; // we may need to set this to false during animations
 
-int frameCount = 0;
-
 void setup() {
   size(displayWidth,displayHeight);
+  frameRate(60);
   tiles = new PImage[3];
   boxImage = loadImage("box.png");
   for (int i = 0; i < 3; i++)
@@ -107,11 +106,14 @@ void drawPlayer() {
 }
 
 void draw () {
-  frameCount++;
-  //println(frameCount);
   //background(255,0,0);
   //levelDrawer.drawLevel();
   //levelDrawer.move(moveLength);
+  
+  fill(127, 127, 255);
+  rect(0, height * 0.85, width, height * 0.15);
+  fill(255, 255, 255);
+  text("Framerate: " + Math.round(frameRate) + " fps", height * 0.1, height * 0.9);
   
   if(menuPage == 0 && millis()-lastMove>500){
     keyPressed();
