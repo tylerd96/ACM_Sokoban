@@ -2,11 +2,15 @@ import java.util.Scanner;
 class LevelData {
   byte[][] currentLevel = new byte[10][10];
   byte[][] backupLevel = new byte[10][10];
-                     
+  Scanner in;           
   ArrayList<Box> boxes = new ArrayList<Box>();
   
   LevelData () {
-    
+    try{
+    in = new Scanner(new File(dataPath("singlePlayerLevels.txt")));
+    } catch (Exception e){
+      print(e);
+    }
   }
   
   boolean isOpen(int x, int y) {
@@ -22,9 +26,8 @@ class LevelData {
   }
   
   void loadNewLevel() {
-    Scanner in = null;
+    
     try {
-    in = new Scanner(new File(dataPath("singlePlayerLevels.txt")));
     for(int i=0;i<10;i++) {
       for(int j=0;j<10;j++) {
         byte num = in.nextByte();
@@ -33,13 +36,13 @@ class LevelData {
         //print(num);
       }
     }
-    in.close();
+    //in.close();
     loadFromBackup();
     }
     catch(Exception e) {
       print(e);
     } finally{
-      if(in!=null)in.close();
+      //if(in!=null)in.close();
     }
     
   }
