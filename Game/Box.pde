@@ -1,10 +1,8 @@
-class Box extneds LevelData{
-  PImage box;
-  int xPosition, yPosition;
+public class Box extends Item {
   
-  Box(int xPos, int yPos) {
-    xPosition = xPos;
-    yPosition = yPos;
+  public Box(String imageFile, boolean moveable, boolean pushable) {
+    super(imageFile, moveable, pushable); 
   }
+  
   
 }
