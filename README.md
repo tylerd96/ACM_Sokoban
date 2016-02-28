@@ -8,8 +8,8 @@
 6 = switch(off)B  
 7 = switch(on)G  
 8 = switch(off)G  
-9 = switch(off)R  
-10 = switch(on)R  
+9 = switch(on)R  
+10 = switch(off)R  
 11 = switch(on)Y  
 12 = switch(off)Y  
 13 = door(open V)B  

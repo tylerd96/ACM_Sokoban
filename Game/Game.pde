@@ -33,10 +33,12 @@ boolean allowInput = true; // we may need to set this to false during animations
 void setup() {
   size(displayWidth,displayHeight);
   frameRate(60);
-  tiles = new PImage[3];
+  tiles = new PImage[21];
   boxImage = loadImage("box.png");
-  for (int i = 0; i < 3; i++)
-    tiles[i] = loadImage("tile" + i + ".png");
+  for (int i = 0; i < 21; i++) {
+    if (i != 3 || i != 4)
+      tiles[i] = loadImage("tile" + i + ".png");
+  }
   //print("hello world");
   playerName = "Circle.png";
   playerImage = loadImage(playerName);
