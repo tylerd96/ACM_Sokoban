@@ -1,4 +1,4 @@
-class Box {
+class Box extneds LevelData{
   PImage box;
   int xPosition, yPosition;
   
