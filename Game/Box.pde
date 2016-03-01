@@ -1,7 +1,7 @@
 public class Box extends Item {
   
-  public Box(String imageFile, boolean moveable, boolean pushable) {
-    super(imageFile, moveable, pushable); 
+  public Box(int col, int row) {
+    super(col, row, "box.png", false,true); 
   }
   
   
