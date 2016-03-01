@@ -1,7 +1,7 @@
 public abstract class Item {
-   private int col,row;
-   private String picture;
-   private boolean allowVisitors, pushable;
+   public int col,row;
+   public String picture;
+   public boolean allowVisitors, pushable;
    
    public Item(int col, int row,  
                String picture, 
@@ -15,7 +15,7 @@ public abstract class Item {
    }
    
    public void setRow(int row) {
-     this.row = row
+     this.row = row;
    }
    public int getRow() {
      return row;

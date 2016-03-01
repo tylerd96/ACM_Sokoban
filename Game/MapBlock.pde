@@ -1,18 +1,17 @@
 public class MapBlock {
-   private final int SIZE = (int)(height*.07);
-   private int row,col;
-   private boolean allowVisitors,visible;
-   private String picture;
-   private ArrayList<Item> items = new ArrayList<Item>();
+   public final int SIZE = (int)(height*.7);
+   public int row,col;
+   public boolean allowVisitors,visible;
+   public PImage picture;
+   public ArrayList<Item> items = new ArrayList<Item>();
   
-   public MapBlock(int col,
-                   int row,
+   public MapBlock(int row,
+                   int col,
                     String picture, 
-                    boolean allowVisitors, 
-                    boolean visible) {
-    this.col = col*SIZE;
-    this.row = row*SIZE;
-    this.picture = picture;
+                    boolean allowVisitors) {
+    this.col = col;
+    this.row = row;
+    this.picture = loadImage(picture);
     this.allowVisitors = allowVisitors;
     this.visible = visible;
      
@@ -22,6 +21,15 @@ public class MapBlock {
    }
    public void addItem(Item item) {
      items.add(item);
+   }
+   public PImage getImage() {
+     return picture;
+   }
+   public int getCol() {
+     return col;
+   }
+   public int getRow() {
+     return row;
    }
   
 }
