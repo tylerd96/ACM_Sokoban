@@ -1,6 +1,10 @@
 //Render levelDrawer;
 import java.io.FileNotFoundException;
-int moveLength,lastMove;
+int moveLength,moveTime;
+final int MOVE_DURATION = 200;
+int moveAddX;
+int moveAddY;
+int moveBoxID;
 String playerName;
 PImage playerImage;
 LevelData levelData;
@@ -33,9 +37,9 @@ boolean allowInput = true; // we may need to set this to false during animations
 void setup() {
   size(displayWidth,displayHeight);
   frameRate(60);
-  tiles = new PImage[21];
+  tiles = new PImage[28];
   boxImage = loadImage("box.png");
-  for (int i = 0; i < 21; i++) {
+  for (int i = 0; i < 28; i++) {
     if (i != 3 || i != 4)
       tiles[i] = loadImage("tile" + i + ".png");
   }
@@ -72,7 +76,7 @@ void drawMenu(int drawPage) {
   switch (drawPage) {
     case 0:
       drawLevel();
-      drawPlayer();
+      drawPlayer(0, 0);
       fill(0, 0, 0);
       text("Level " + (levelIndex + 1), 20, height / 20);
       break;
@@ -99,12 +103,12 @@ void drawTile(int x, int y) {
   image(tiles[levelData.getTile(x, y)], originX + y * tileSize, originY + x * tileSize, tileSize, tileSize);
 }
 
-void drawBox(int x, int y) {
-  image(boxImage, originX + y * tileSize, originY + x * tileSize, tileSize, tileSize);
+void drawBox(int x, int y, int offsetX, int offsetY) {
+  image(boxImage, originX + y * tileSize + offsetX, originY + x * tileSize + offsetY, tileSize, tileSize);
 }
 
-void drawPlayer() {
-  image(playerImage, originX + playerY * tileSize, originY + playerX * tileSize, tileSize, tileSize);
+void drawPlayer(int offsetX, int offsetY) {
+  image(playerImage, originX + playerY * tileSize + offsetX, originY + playerX * tileSize + offsetY, tileSize, tileSize);
 }
 
 void draw () {
@@ -117,73 +121,124 @@ void draw () {
   fill(255, 255, 255);
   text("Framerate: " + Math.round(frameRate) + " fps", height * 0.1, height * 0.9);
   
-  if(menuPage == 0 && millis()-lastMove>500){
-    keyPressed();
+  if (menuPage == 0) {
+    if (moveTime > 0) {
+      moveTime -= (int) (1000 / frameRate);
+      int animShift = (int) (Math.min((1 - moveTime / (float)MOVE_DURATION), 1) * tileSize);
+      drawTile(playerX, playerY);
+      drawTile(playerX + moveAddX, playerY + moveAddY);
+      if (moveBoxID != -1) {
+        drawTile(playerX + 2 * moveAddX, playerY + 2 * moveAddY);
+        drawBox(playerX + moveAddX, playerY + moveAddY, moveAddY * animShift, moveAddX * animShift);
+      }
+      
+      drawPlayer(moveAddY * animShift, moveAddX * animShift);
+      if (moveTime <= 0) {
+        finishMove(moveAddX, moveAddY, moveBoxID);
+        if (menuPage == 0)
+          checkInput();
+      }
+    } else {
+      checkInput();
+    }
   }
-  
+
+}
+
+void checkInput() {
+  if (keyPressed) {
+    switch (key) {
+      case MOVE_UP:
+        tryToMove(-1, 0);
+        break;
+      case MOVE_DOWN:
+        tryToMove(1, 0);
+        break;
+      case MOVE_LEFT:
+        tryToMove(0, -1);
+        break;
+      case MOVE_RIGHT:
+        tryToMove(0, 1);
+        break;
+      case RESET_LEVEL:
+        drawMenu(2);
+        break;
+    }
+  }
 }
 
 void tryToMove(int addX, int addY) {
   if (levelData.isOpen(playerX + addX, playerY + addY)) {
     int boxThere = levelData.getBoxID(playerX + addX, playerY + addY);
     if (boxThere == -1) { // no box in the way
-      move(addX, addY, -1);
-      println("normal move");
+      startMove(addX, addY, -1);
+      //println("normal move");
     }
-    else if (levelData.isOpen(playerX + addX * 2, playerY + addY * 2) && !levelData.isBox(playerX + addX * 2, playerY + addY * 2)) { // box in the way, but it can be pushed
-      move(addX, addY, boxThere);
-      println("box pushing move");
+    else if (levelData.isOpenForBox(playerX + addX * 2, playerY + addY * 2) && !levelData.isBox(playerX + addX * 2, playerY + addY * 2)) { // box in the way, but it can be pushed
+      startMove(addX, addY, boxThere);
+      //println("box pushing move");
     }
     else { // the box can't be pushed from this angle
-      println("can't move");
+      //println("can't move");
     }
   }
   else // something in the way of the player moving
     println("can't move");
 }
 
-void move(int addX, int addY, int boxID) {
-  // check for pulling
+void startMove(int addX, int addY, int boxID) {
+  moveTime = MOVE_DURATION;
+  moveAddX = addX;
+  moveAddY = addY;
+  moveBoxID = boxID;
+  //levelDrawer.playerPosition(playerX, playerY);
+}
+
+void finishMove(int addX, int addY, int boxID) {
   playerX += addX;
   playerY += addY;
   if (boxID != -1) {
     levelData.moveBox(boxID, playerX + addX, playerY + addY);
-    drawBox(playerX + addX, playerY + addY);
+    drawTile(playerX + addX, playerY + addY);
+    drawBox(playerX + addX, playerY + addY, 0, 0);
     drawTile(playerX, playerY);
+    interact(playerX + addX, playerY + addY);
   }
-  drawPlayer();
+  
+
+  drawPlayer(0, 0);
   drawTile(playerX - addX, playerY - addY);
-  if(levelData.isFinish(playerX,playerY)) {
+  interact(playerX, playerY);
+
+}
+
+void interact(int spaceX, int spaceY) {
+  int tileValue = levelData.getTile(spaceX, spaceY);
+  if (tileValue == 2)
     drawMenu(3);
+  else if (tileValue >= 5 && tileValue <= 12)
+    flipSwitch(spaceX, spaceY, (tileValue - 5) / 2, tileValue % 2 == 0);
+}
+
+void flipSwitch(int spaceX, int spaceY, int colorID, boolean turningOn) {
+  if (turningOn) {
+    levelData.setTile(spaceX, spaceY, colorID * 2 + 5);
+    if (--levelData.offSwitches[colorID] == 0)
+      levelData.setTile(levelData.gateCoordsX[colorID], levelData.gateCoordsY[colorID], colorID * 2 + 13);
+  } else {
+    levelData.setTile(spaceX, spaceY, colorID * 2 + 6);
+    if (levelData.offSwitches[colorID]++ == 0)
+      levelData.setTile(levelData.gateCoordsX[colorID], levelData.gateCoordsY[colorID], colorID * 2 + 14);
   }
-  //levelDrawer.playerPosition(playerX, playerY);
+  drawTile(levelData.gateCoordsX[colorID], levelData.gateCoordsY[colorID]);
+  drawTile(spaceX, spaceY);
+  drawPlayer(0, 0);
+  if (levelData.getBoxID(spaceX, spaceY) != -1)
+    drawBox(spaceX, spaceY, 0, 0);
 }
 
 void keyPressed() {
   switch (menuPage) {
-    case 0:
-      if (allowInput && keyPressed) { // player input
-        //print(key);
-        switch (key) {
-          case MOVE_UP:
-            tryToMove(-1, 0);
-            break;
-          case MOVE_DOWN:
-            tryToMove(1, 0);
-            break;
-          case MOVE_LEFT:
-            tryToMove(0, -1);
-            break;
-          case MOVE_RIGHT:
-            tryToMove(0, 1);
-            break;
-          case RESET_LEVEL:
-            drawMenu(2);
-            break;
-        }
-      } 
-      lastMove = millis();
-      break;
     case 1:
     // fall through
     case 3:

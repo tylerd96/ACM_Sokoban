@@ -5,6 +5,11 @@ class LevelData {
   Scanner in;           
   ArrayList<Box> boxes = new ArrayList<Box>();
   
+  // switch-related variables. color indices: blue = 0, green = 1, red = 2, yellow = 3
+  byte[] offSwitches = new byte[4];
+  int[] gateCoordsX = new int[4];
+  int[] gateCoordsY = new int[4];
+  
   LevelData () {
     try{
     in = new Scanner(new File(dataPath("singlePlayerLevels.txt")));
@@ -18,11 +23,14 @@ class LevelData {
     if (x < 0 || x > 9 || y < 0 || y > 9)
       return false;
     int a = getTile(x, y);
-    return a == 1 || a == 2;
+    return !(a == 0 || a == 14 || a == 16 || a == 18 || a == 20 || a == 21 || a > 22);
   }
   
-  boolean isFinish(int x,int y) {
-    return currentLevel[x][y] == 2;
+  boolean isOpenForBox(int x, int y) {
+    if (x < 0 || x > 9 || y < 0 || y > 9)
+      return false;
+    int a = getTile(x, y);
+    return !(a == 0 || a == 14 || a == 16 || a == 18 || a == 20 || a > 22);
   }
   
   void loadNewLevel() {
@@ -53,18 +61,49 @@ class LevelData {
   
   void loadFromBackup() {
     boxes = new ArrayList<Box>();
+    offSwitches[0] = 0; offSwitches[1] = 0; offSwitches[2] = 0; offSwitches[3] = 0;
     for(int i=0;i<10;i++) {
       for(int j=0;j<10;j++) {
         byte tileValue = backupLevel[i][j];
-        if (tileValue == 4) {
-          boxes.add(new Box(i, j));
-          currentLevel[i][j] = 1;
-        } else if (tileValue == 3) {
-          playerX = i;
-          playerY = j;
-          currentLevel[i][j] = 1;
-        } else {
-          currentLevel[i][j] = tileValue;
+        currentLevel[i][j] = tileValue;
+        switch (tileValue) {
+          case 3:
+            playerX = i;
+            playerY = j;
+            currentLevel[i][j] = 1;
+            break;
+          case 4:
+            boxes.add(new Box(i, j));
+            currentLevel[i][j] = 1;
+            break;
+          case 6:
+            offSwitches[0]++;
+            break;
+          case 8:
+            offSwitches[1]++;
+            break;
+          case 10:
+            offSwitches[2]++;
+            break;
+          case 12:
+            offSwitches[3]++;
+            break;
+          case 14:
+            gateCoordsX[0] = i;
+            gateCoordsY[0] = j;
+            break;
+          case 16:
+            gateCoordsX[1] = i;
+            gateCoordsY[1] = j;
+            break;
+          case 18:
+            gateCoordsX[2] = i;
+            gateCoordsY[2] = j;
+            break;
+          case 20:
+            gateCoordsX[3] = i;
+            gateCoordsY[3] = j;
+            break;
         }
       }
     }
@@ -93,5 +132,9 @@ class LevelData {
   
   int getTile(int x, int y) {
     return currentLevel[x][y];
+  }
+  
+  void setTile(int x, int y, int value) {
+    currentLevel[x][y] = (byte) value;
   }
 }
