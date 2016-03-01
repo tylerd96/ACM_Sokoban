@@ -60,7 +60,12 @@ void drawMenu(int drawPage) {
   menuPage = drawPage;
 }
 void drawLevel() {
+  ArrayList<Item> items;
   for(MapBlock mb : blocks) {
     image(mb.getImage(),ORIGIN_X+mb.getCol()*SIZE, ORIGIN_Y + mb.getRow()*SIZE,SIZE,SIZE);
+    items = mb.getItemList();
+    for(Item i : items){
+      image(i.getPicture(), ORIGIN_X+mb.getCol() * SIZE, ORIGIN_Y + mb.getRow()*SIZE,SIZE,SIZE);
+    }
   }
 }

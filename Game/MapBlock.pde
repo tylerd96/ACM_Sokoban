@@ -13,7 +13,6 @@ public class MapBlock {
     this.row = row;
     this.picture = loadImage(picture);
     this.allowVisitors = allowVisitors;
-    this.visible = visible;
      
    }
    public void removeItem(int i) {
@@ -33,6 +32,9 @@ public class MapBlock {
    }
    public boolean isMoveable() {
      return allowVisitors;
+   }
+   public ArrayList<Item> getItemList() {
+     return items;
    }
   
 }
