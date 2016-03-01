@@ -5,4 +5,20 @@ public class Box extends Item {
   }
   
   
+  
+  public void setRow(int row) {
+    this.row = row;
+  }
+  public int getRow() {
+    return row;
+  }
+  public void setCol(int col) {
+    this.col = col;
+  }
+  public int getCol() {
+    return col;
+  }
+  
+  
+  
 }
