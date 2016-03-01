@@ -31,5 +31,8 @@ public class MapBlock {
    public int getRow() {
      return row;
    }
+   public boolean isMoveable() {
+     return allowVisitors;
+   }
   
 }

@@ -11,9 +11,7 @@ final char MOVE_RIGHT = 'd';
 final char NEXT = ' ' ;
 final char BACK = '\b';
 final char RESET_LEVEL = 'r';
-int SIZE;
-int ORIGIN_X;
-int ORIGIN_Y;
+int SIZE, ORIGIN_X, ORIGIN_Y;
 
 void setup() {
   size(displayWidth,displayHeight);
