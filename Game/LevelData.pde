@@ -130,6 +130,10 @@ class LevelData {
     boxes.get(boxID).yPosition = y;
   }
   
+  void destroyBox(int boxID) {
+    boxes.remove(boxID);
+  }
+  
   int getTile(int x, int y) {
     return currentLevel[x][y];
   }

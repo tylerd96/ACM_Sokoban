@@ -216,7 +216,11 @@ void interact(int spaceX, int spaceY) {
   int tileValue = levelData.getTile(spaceX, spaceY);
   if (tileValue == 2)
     drawMenu(3);
-  else if (tileValue >= 5 && tileValue <= 12)
+  else if (tileValue == 21) {
+    levelData.setTile(spaceX, spaceY, 22);
+    levelData.destroyBox(moveBoxID);
+    drawTile(spaceX, spaceY);
+  } else if (tileValue >= 5 && tileValue <= 12)
     flipSwitch(spaceX, spaceY, (tileValue - 5) / 2, tileValue % 2 == 0);
 }
 
