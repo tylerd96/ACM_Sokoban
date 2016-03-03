@@ -4,6 +4,8 @@ public class LevelData {
   Scanner in;
   MapBlock mb;
   ArrayList<Item> items = new ArrayList<Item>();
+  int playerX,playerY;
+  Player player;
   
   LevelData() {
     try{
@@ -24,7 +26,8 @@ public class LevelData {
             case 0: blocks.add(new MapBlock(i,j,"tile0.png", false)); break;
             case 1: blocks.add(new MapBlock(i,j,"tile1.png",true)); break;
             case 2: blocks.add(new MapBlock(i,j,"tile2.png", true)); break;
-            case 3: blocks.add(new MapBlock(i,j,"tile1.png", true)); break;
+            case 3: blocks.add(new MapBlock(i,j,"tile1.png", true)); 
+                    player = new Player(i,j,"Circle.png"); break;
             case 4: mb = new MapBlock(i,j,"tile1.png",true); mb.addItem(new Box(i,j));
                     blocks.add(mb); break;
           }
@@ -46,7 +49,8 @@ public class LevelData {
           case 0: blocks.add(new MapBlock(i,j,"tile0.png", false)); break;
           case 1: blocks.add(new MapBlock(i,j,"tile1.png",true)); break;
           case 2: blocks.add(new MapBlock(i,j,"tile2.png", true)); break;
-          case 3: blocks.add(new MapBlock(i,j,"tile1.png", true)); break;
+          case 3: blocks.add(new MapBlock(i,j,"tile1.png", true)); playerX=i;
+                  playerY=j; break;
           case 4: mb = new MapBlock(i,j,"tile1.png",true); mb.addItem(new Box(i,j));
                   blocks.add(mb); break;
         }
@@ -54,9 +58,15 @@ public class LevelData {
     }
     return blocks;
   }
-  
-
-
+  int getPlayerX() {
+    return playerX;
+  }
+  int getPlayerY() {
+    return playerY;
+  }
+  Player getPlayer() {
+    return player;
+  }
 
 
 

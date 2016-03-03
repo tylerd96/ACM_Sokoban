@@ -3,6 +3,7 @@ ArrayList<MapBlock> blocks = new ArrayList<MapBlock>();
 int playerX,playerY,levelIndex=0, menuPage=1;
 MapBlock[] tiles;
 LevelData levelData;
+Player player;
 
 final char MOVE_UP = 'w';
 final char MOVE_DOWN = 's';
@@ -29,7 +30,12 @@ void draw() {
   rect(0,0,width,height);
   //fill(255,255,255);
   drawLevel();
-  
+  drawPlayer();
+}
+
+void drawPlayer() {
+  player = levelData.getPlayer();
+  image(player.getImage(), ORIGIN_X+player.getCol()*SIZE, ORIGIN_Y + player.getRow()*SIZE,SIZE,SIZE);
 }
 void drawMenu(int drawPage) {
   background(127, 127, 255);
@@ -61,6 +67,7 @@ void drawMenu(int drawPage) {
 }
 void drawLevel() {
   ArrayList<Item> items;
+  drawPlayer();
   for(MapBlock mb : blocks) {
     image(mb.getImage(),ORIGIN_X+mb.getCol()*SIZE, ORIGIN_Y + mb.getRow()*SIZE,SIZE,SIZE);
     items = mb.getItemList();

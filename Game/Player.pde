@@ -1,10 +1,14 @@
 public class Player {
   private final int SIZE = (int)(height*.07);
-  private String fileName;
+  private PImage picture;
   private int row, col;
   MapBlock mb;
   
-  
+  public Player(int row, int col, String fileName) {
+    this.row = row;
+    this.col = col;
+    picture = loadImage(fileName);
+  }
   
   public void setRow(int row) {
       this.row = row;
@@ -17,5 +21,8 @@ public class Player {
   }
   public int getCol() {
     return col;
+  }
+  public PImage getImage() {
+    return picture;
   }
 }
