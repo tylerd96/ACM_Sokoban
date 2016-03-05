@@ -14,6 +14,9 @@ final char BACK = '\b';
 final char RESET_LEVEL = 'r';
 int SIZE, ORIGIN_X, ORIGIN_Y;
 
+final int MOVE_DURATION = 200;
+int moveTime = 0;
+
 void setup() {
   size(displayWidth,displayHeight);
   frameRate(60);
@@ -31,7 +34,16 @@ void draw() {
   rect(0, height * 0.85, width, height * 0.15);
   fill(255, 255, 255);
   text("Framerate: " + Math.round(frameRate) + " fps", height * 0.1, height * 0.9);
-  checkInput();
+  if (menuPage == 0) {
+    if (moveTime > 0) {
+      moveTime -= (int) (1000 / frameRate);
+      if (moveTime <= 0) {
+        // finish up the move
+      }
+    } else {
+      checkInput();
+    }
+  }
 }
 
 void drawPlayer() {
@@ -72,7 +84,7 @@ void checkInput() {
     switch(key) {
       case MOVE_UP:      move(-1,0);    break;
       case MOVE_DOWN:    move(1,0);     break;
-      case MOVE_LEFT:    move(0,1);     break;
+      case MOVE_LEFT:    move(0,-1);     break;
       case MOVE_RIGHT:   move(0,1);     break;
       case RESET_LEVEL:  drawMenu(2);   break;
     }
@@ -80,6 +92,7 @@ void checkInput() {
 }
 
 void move(int row, int col) {
+  moveTime = MOVE_DURATION;
   MapBlock block = null;
   for(MapBlock mb : blocks){
     if(mb.getRow() == player.getRow()+row && mb.getCol() == player.getCol()+col){
@@ -88,7 +101,8 @@ void move(int row, int col) {
   //print("hello");
   if(player.isOpen(block)){
     player.move(player.getRow()+row,player.getCol()+col);
-    print(player.getRow()+row+ "   " +player.getCol()+col + "         ");
+    drawPlayer();
+    println(player.getRow()+row+ "   " +player.getCol()+col);
     //print("hi");
   }
   
