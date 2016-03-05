@@ -15,7 +15,7 @@ public class LevelData {
   }
 }
   ArrayList<MapBlock> loadNewLevel() {
-    MapBlock mb; //<>//
+    MapBlock mb; //<>// //<>//
     ArrayList<MapBlock> blocks = new ArrayList<MapBlock>();
     try{
       for(int i=0;i<10;i++) {
@@ -30,6 +30,14 @@ public class LevelData {
                     player = new Player(i,j,"Circle.png"); break;
             case 4: mb = new MapBlock(i,j,"tile1.png",true); mb.addItem(new Box(i,j));
                     blocks.add(mb); break;
+            case 14: mb = new MapBlock(i,j,"tile1.png",false);
+                     mb.addItem(new Gate(i,j,GateColor.BLUE)); blocks.add(mb); break;
+            case 16: mb = new MapBlock(i,j,"tile1.png",false);
+                     mb.addItem(new Gate(i,j,GateColor.GREEN)); blocks.add(mb); break;
+            case 18: mb = new MapBlock(i,j,"tile1.png",false);
+                     mb.addItem(new Gate(i,j,GateColor.RED)); blocks.add(mb); break;
+            case 20: mb = new MapBlock(i,j,"tile1.png",false);
+                     mb.addItem(new Gate(i,j,GateColor.YELLOW)); blocks.add(mb); break;
           }
         }
       }
