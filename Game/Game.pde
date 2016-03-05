@@ -1,6 +1,6 @@
 byte[][] currentLevel;
 ArrayList<MapBlock> blocks = new ArrayList<MapBlock>();
-int playerX,playerY,levelIndex=0, menuPage=1;
+int playerX,playerY,levelIndex=-1, menuPage=1;
 MapBlock[] tiles;
 LevelData levelData;
 Player player;
@@ -18,8 +18,8 @@ void setup() {
   size(displayWidth,displayHeight);
   frameRate(60);
   levelData = new LevelData();
-  blocks = levelData.loadNewLevel();
-  print(width*.5 - height*.35);
+  //blocks = levelData.loadNewLevel();
+  //print(width*.5 - height*.35);
   SIZE = (int)(height*.07);
   ORIGIN_X = (int)(width*.5 - height*.35);
   ORIGIN_Y = (int)(height*.15);
@@ -35,6 +35,7 @@ void draw() {
 
 void drawPlayer() {
   player = levelData.getPlayer();
+  System.out.println(player.getRow() + "  " + player.getCol());
   image(player.getImage(), ORIGIN_X+player.getCol()*SIZE, ORIGIN_Y + player.getRow()*SIZE,SIZE,SIZE);
 }
 void drawMenu(int drawPage) {
@@ -43,7 +44,7 @@ void drawMenu(int drawPage) {
   switch (drawPage) {
     case 0:
       drawLevel();
-      //drawPlayer();
+      drawPlayer();
       fill(0, 0, 0);
       text("Level " + (levelIndex + 1), 20, height / 20);
       break;
@@ -67,7 +68,7 @@ void drawMenu(int drawPage) {
 }
 void drawLevel() {
   ArrayList<Item> items;
-  drawPlayer();
+  //drawPlayer();
   for(MapBlock mb : blocks) {
     image(mb.getImage(),ORIGIN_X+mb.getCol()*SIZE, ORIGIN_Y + mb.getRow()*SIZE,SIZE,SIZE);
     items = mb.getItemList();
@@ -81,14 +82,14 @@ void keyPressed() {
   switch (menuPage) {
     case 1: case 3:
       if (key == NEXT) {
-        levelData.loadNewLevel();
+        blocks = levelData.loadNewLevel();
         levelIndex++;
         drawMenu(0);
       }
       break;
     case 2:
       if (key == NEXT) {
-        levelData.resetLevel();
+        blocks = levelData.resetLevel();
         drawMenu(0);
       } else if (key == BACK) {
         drawMenu(0);
