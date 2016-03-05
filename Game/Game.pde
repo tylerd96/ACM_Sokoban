@@ -31,6 +31,7 @@ void draw() {
   rect(0, height * 0.85, width, height * 0.15);
   fill(255, 255, 255);
   text("Framerate: " + Math.round(frameRate) + " fps", height * 0.1, height * 0.9);
+  checkInput();
 }
 
 void drawPlayer() {
@@ -66,6 +67,35 @@ void drawMenu(int drawPage) {
   }
   menuPage = drawPage;
 }
+void checkInput() {
+  if(keyPressed) {
+    switch(key) {
+      case MOVE_UP:      move(-1,0);    break;
+      case MOVE_DOWN:    move(1,0);     break;
+      case MOVE_LEFT:    move(0,1);     break;
+      case MOVE_RIGHT:   move(0,1);     break;
+      case RESET_LEVEL:  drawMenu(2);   break;
+    }
+  }
+}
+
+void move(int row, int col) {
+  MapBlock block = null;
+  for(MapBlock mb : blocks){
+    if(mb.getRow() == player.getRow()+row && mb.getCol() == player.getCol()+col){
+      block = mb; break;
+    }}
+  //print("hello");
+  if(player.isOpen(block)){
+    player.move(player.getRow()+row,player.getCol()+col);
+    print(player.getRow()+row+ "   " +player.getCol()+col + "         ");
+    //print("hi");
+  }
+  
+  
+  
+}
+
 void drawLevel() {
   ArrayList<Item> items;
   //drawPlayer();

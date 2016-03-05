@@ -25,4 +25,12 @@ public class Player {
   public PImage getImage() {
     return picture;
   }
+  public boolean isOpen(MapBlock mb) {
+    return mb.isMoveable();
+  }
+  public void move(int row, int col) {
+    this.row = row;
+    this.col = col;
+  }
+  
 }

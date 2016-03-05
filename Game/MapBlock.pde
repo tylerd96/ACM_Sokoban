@@ -36,5 +36,18 @@ public class MapBlock {
    public ArrayList<Item> getItemList() {
      return items;
    }
-  
+   public boolean hasBox() {
+     for(Item i : items) {
+       if(i instanceof Box)
+         return true;
+     }
+     return false;
+   }
+   public Box getBox() {
+     for(Item i : items) {
+       if( i instanceof Box)
+         return (Box)i;
+     }
+     return null;
+   }
 }
