@@ -23,7 +23,11 @@
 21 = open pit  
 22 = boxed pit  
 23 = decoration 1  (grass w/ bush)
+
 24 = decoration 2  (open space w/ rock)
+
 25 = decoration 3  (grass)
+
 26 = decoration 4  (grass w/ rock)
+
 27 = "nothing" tile  
