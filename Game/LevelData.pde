@@ -14,31 +14,14 @@ public class LevelData {
     print(e);
   }
 }
-  ArrayList<MapBlock> loadNewLevel() {
-    MapBlock mb; //<>// //<>//
-    ArrayList<MapBlock> blocks = new ArrayList<MapBlock>();
+  MapBlock[][] loadNewLevel() { //<>//
+    MapBlock[][] blocks = new MapBlock[10][10];
     try{
       for(int i=0;i<10;i++) {
         for(int j=0;j<10;j++) {
           byte num = in.nextByte();
           currentLevel[i][j] = num;
-          switch(num) {
-            case 0: blocks.add(new MapBlock(i,j,"tile0.png", false)); break;
-            case 1: blocks.add(new MapBlock(i,j,"tile1.png",true)); break;
-            case 2: blocks.add(new MapBlock(i,j,"tile2.png", true)); break;
-            case 3: blocks.add(new MapBlock(i,j,"tile1.png", true)); 
-                    player = new Player(i,j,"Circle.png"); break;
-            case 4: mb = new MapBlock(i,j,"tile1.png",true); mb.addItem(new Box(i,j));
-                    blocks.add(mb); break;
-            case 14: mb = new MapBlock(i,j,"tile1.png",false);
-                     mb.addItem(new Gate(i,j,GateColor.BLUE)); blocks.add(mb); break;
-            case 16: mb = new MapBlock(i,j,"tile1.png",false);
-                     mb.addItem(new Gate(i,j,GateColor.GREEN)); blocks.add(mb); break;
-            case 18: mb = new MapBlock(i,j,"tile1.png",false);
-                     mb.addItem(new Gate(i,j,GateColor.RED)); blocks.add(mb); break;
-            case 20: mb = new MapBlock(i,j,"tile1.png",false);
-                     mb.addItem(new Gate(i,j,GateColor.YELLOW)); blocks.add(mb); break;
-          }
+          blocks[i][j] = loadBlock(num, i, j);
         }
       }
       
@@ -48,24 +31,38 @@ public class LevelData {
     return blocks;
   }
   
-  ArrayList<MapBlock> resetLevel() {
-    ArrayList<MapBlock> blocks = new ArrayList<MapBlock>();
-    MapBlock mb;
+  MapBlock[][] resetLevel() {
+    MapBlock[][] blocks = new MapBlock[10][10];
     for(int i=0; i<10;i++) {
       for(int j=0;j<10;j++) {
-        switch(currentLevel[i][j]) {
-          case 0: blocks.add(new MapBlock(i,j,"tile0.png", false)); break;
-          case 1: blocks.add(new MapBlock(i,j,"tile1.png",true)); break;
-          case 2: blocks.add(new MapBlock(i,j,"tile2.png", true)); break;
-          case 3: blocks.add(new MapBlock(i,j,"tile1.png", true)); 
-                  player = new Player(i,j,"Circle.png"); break;
-          case 4: mb = new MapBlock(i,j,"tile1.png",true); mb.addItem(new Box(i,j));
-                  blocks.add(mb); break;
-        }
+        blocks[i][j] = loadBlock(currentLevel[i][j], i, j);
       }
     }
     return blocks;
   }
+  
+  MapBlock loadBlock(byte tileID, int i, int j) {
+    switch(tileID) {
+      case 0: return new MapBlock(i,j,"tile0.png", false,false);
+      case 1: return new MapBlock(i,j,"tile1.png",true,false);
+      case 2: return new MapBlock(i,j,"tile2.png", true,false);
+      case 3: player = new Player(i,j,"Circle.png");
+              return new MapBlock(i,j,"tile1.png", true,false);
+      case 4: mb = new MapBlock(i,j,"tile1.png",true,false); mb.addItem(new Box(i,j));
+              return mb;
+      case 14: mb = new MapBlock(i,j,"tile1.png",false,false);
+               mb.addItem(new Gate(i,j,GateColor.BLUE)); return mb;
+      case 16: mb = new MapBlock(i,j,"tile1.png",false,false);
+               mb.addItem(new Gate(i,j,GateColor.GREEN)); return mb;
+      case 18: mb = new MapBlock(i,j,"tile1.png",false,false);
+               mb.addItem(new Gate(i,j,GateColor.RED)); return mb;
+      case 20: mb = new MapBlock(i,j,"tile1.png",false,false);
+               mb.addItem(new Gate(i,j,GateColor.YELLOW)); return mb;
+      case 21: return  new MapBlock(i,j,"tile21.png",false,true);
+    }
+    return null;
+  }
+  
   Player getPlayer() {
     return player;
   }

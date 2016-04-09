@@ -1,5 +1,5 @@
 public class Player {
-  private final int SIZE = (int)(height*.07);
+  //private final int SIZE = (int)(height*.07);
   private PImage picture;
   private int row, col;
   MapBlock mb;
@@ -26,7 +26,7 @@ public class Player {
     return picture;
   }
   public boolean isOpen(MapBlock mb) {
-    return mb.isMoveable();
+    return mb != null && mb.isMoveable(false);
   }
   public void move(int row, int col) {
     this.row = row;

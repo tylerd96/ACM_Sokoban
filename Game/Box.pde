@@ -18,6 +18,10 @@ public class Box extends Item {
   public int getCol() {
    return col;
   }
+  public void move(int row, int col) {
+    this.row = row;
+    this.col = col;
+  }
   public boolean isOpen(MapBlock mb) {
     
     
