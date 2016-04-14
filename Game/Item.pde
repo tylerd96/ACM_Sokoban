@@ -1,4 +1,4 @@
-public abstract class Item {
+public abstract class Item {   
    public int col,row;
    public PImage picture;
    public boolean allowVisitors, pushable;
@@ -28,5 +28,9 @@ public abstract class Item {
    }
    public PImage getPicture() {
      return picture;
+   }
+   
+   public void setPicture(String img) {
+     this.picture = loadImage(img);
    }
 }

@@ -144,15 +144,59 @@ void startMove(int addX, int addY, Box boxThere) {
 
 void finishMove(int addX, int addY, Box boxThere) {
   player.move(player.getRow() + addX, player.getCol() + addY);
+  interact(getBlock(player.getRow(), player.getCol()), false);
   if (boxThere != null) {
+    interact(getBlock(player.getCol() + addY, player.getRow() + addX), true);
     boxThere.move(player.getCol() + addY, player.getRow() + addX);
     getBlock(player.getRow() + addX, player.getCol() + addY).addItem(boxThere);
     drawTile(boxThere.getRow(), boxThere.getCol());
-    drawTile(player.getRow(), player.getCol());
   }
+  drawTile(player.getRow(), player.getCol());
   
   drawPlayer();
   drawTile(player.getRow() - addX, player.getCol() - addY);
+}
+
+void interact(MapBlock space, boolean isBox) {
+  for (Item it : space.items) {
+    if (it instanceof Switch) {
+      Switch sw = (Switch) it;
+      byte c = sw.switchColor;
+      if (sw.on) {
+        if (levelData.offSwitches[c]++ == 0)
+          closeGates(c);
+        sw.on = false;
+        sw.setPicture("tile" + (6 + 2 * c) + ".png");
+      } else {
+        if (--levelData.offSwitches[c] == 0)
+          openGates(c);
+        sw.on = true;
+        sw.setPicture("tile" + (5 + 2 * c) + ".png");
+      }
+    } else if (it instanceof Finish)
+      if (!isBox)
+        drawMenu(3);
+  }
+}
+
+void closeGates(byte c) {
+  for (MapBlock mb : levelData.gates[c]) {
+    mb.allowVisitors = false;
+    for (Item it : mb.items)
+      if (it instanceof Gate)
+        ((Gate) it).setPicture("tile" + (14 + 2 * c) + ".png");
+    drawTile(mb.getRow(), mb.getCol());
+  }
+}
+
+void openGates(byte c) {
+  for (MapBlock mb : levelData.gates[c]) {
+    mb.allowVisitors = true;
+    for (Item it : mb.items)
+      if (it instanceof Gate)
+        ((Gate) it).setPicture("tile" + (13 + 2 * c) + ".png");
+    drawTile(mb.getRow(), mb.getCol());
+  }
 }
 
 void drawLevel() {
