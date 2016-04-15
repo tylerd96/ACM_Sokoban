@@ -228,17 +228,23 @@ void flipSwitch(int spaceX, int spaceY, int colorID, boolean turningOn) {
   if (turningOn) {
     levelData.setTile(spaceX, spaceY, colorID * 2 + 5);
     if (--levelData.offSwitches[colorID] == 0)
-      levelData.setTile(levelData.gateCoordsX[colorID], levelData.gateCoordsY[colorID], colorID * 2 + 13);
+      setMultiple(levelData.gateCoordsX[colorID], levelData.gateCoordsY[colorID], colorID * 2 + 13);
   } else {
     levelData.setTile(spaceX, spaceY, colorID * 2 + 6);
     if (levelData.offSwitches[colorID]++ == 0)
-      levelData.setTile(levelData.gateCoordsX[colorID], levelData.gateCoordsY[colorID], colorID * 2 + 14);
+      setMultiple(levelData.gateCoordsX[colorID], levelData.gateCoordsY[colorID], colorID * 2 + 14);
   }
-  drawTile(levelData.gateCoordsX[colorID], levelData.gateCoordsY[colorID]);
   drawTile(spaceX, spaceY);
   drawPlayer(0, 0);
   if (levelData.getBoxID(spaceX, spaceY) != -1)
     drawBox(spaceX, spaceY, 0, 0);
+}
+
+void setMultiple(ArrayList listX, ArrayList listY, int value) {
+  for (int i = 0; i < Math.min(listX.size(), listY.size()); i++) {
+    levelData.setTile((int) listX.get(i), (int) listY.get(i), value);
+    drawTile((int) listX.get(i), (int) listY.get(i));
+  }
 }
 
 void keyPressed() {

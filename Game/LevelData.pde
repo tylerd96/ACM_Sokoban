@@ -7,8 +7,8 @@ class LevelData {
   
   // switch-related variables. color indices: blue = 0, green = 1, red = 2, yellow = 3
   byte[] offSwitches = new byte[4];
-  int[] gateCoordsX = new int[4];
-  int[] gateCoordsY = new int[4];
+  ArrayList[] gateCoordsX = new ArrayList[4];
+  ArrayList[] gateCoordsY = new ArrayList[4];
   
   LevelData () {
     try{
@@ -62,6 +62,8 @@ class LevelData {
   void loadFromBackup() {
     boxes = new ArrayList<Box>();
     offSwitches[0] = 0; offSwitches[1] = 0; offSwitches[2] = 0; offSwitches[3] = 0;
+    gateCoordsX[0] = new ArrayList(); gateCoordsX[1] = new ArrayList(); gateCoordsX[2] = new ArrayList(); gateCoordsX[3] = new ArrayList();
+    gateCoordsY[0] = new ArrayList(); gateCoordsY[1] = new ArrayList(); gateCoordsY[2] = new ArrayList(); gateCoordsY[3] = new ArrayList();
     for(int i=0;i<10;i++) {
       for(int j=0;j<10;j++) {
         byte tileValue = backupLevel[i][j];
@@ -89,20 +91,20 @@ class LevelData {
             offSwitches[3]++;
             break;
           case 14:
-            gateCoordsX[0] = i;
-            gateCoordsY[0] = j;
+            gateCoordsX[0].add(i);
+            gateCoordsY[0].add(j);
             break;
           case 16:
-            gateCoordsX[1] = i;
-            gateCoordsY[1] = j;
+            gateCoordsX[1].add(i);
+            gateCoordsY[1].add(j);
             break;
           case 18:
-            gateCoordsX[2] = i;
-            gateCoordsY[2] = j;
+            gateCoordsX[2].add(i);
+            gateCoordsY[2].add(j);
             break;
           case 20:
-            gateCoordsX[3] = i;
-            gateCoordsY[3] = j;
+            gateCoordsX[3].add(i);
+            gateCoordsY[3].add(j);
             break;
         }
       }
