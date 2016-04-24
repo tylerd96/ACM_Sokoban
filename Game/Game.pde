@@ -205,19 +205,19 @@ void finishMove(int addX, int addY, int boxID) {
     drawTile(playerX + addX, playerY + addY);
     drawBox(playerX + addX, playerY + addY, 0, 0);
     drawTile(playerX, playerY);
-    interact(playerX + addX, playerY + addY);
+    interact(playerX + addX, playerY + addY, true);
   }
   
 
   drawPlayer(0, 0);
   drawTile(playerX - addX, playerY - addY);
-  interact(playerX, playerY);
+  interact(playerX, playerY, false);
 
 }
 
-void interact(int spaceX, int spaceY) {
+void interact(int spaceX, int spaceY, boolean isBox) {
   int tileValue = levelData.getTile(spaceX, spaceY);
-  if (tileValue == 2)
+  if (tileValue == 2 && !isBox)
     drawMenu(3);
   else if (tileValue == 21) {
     levelData.setTile(spaceX, spaceY, 22);
