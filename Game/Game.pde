@@ -19,6 +19,7 @@ int moveTime = 0;
 int moveAddX = 0;
 int moveAddY = 0;
 Box moveBox = null;
+int totMoves;
 
 void setup() {
   size(displayWidth,displayHeight);
@@ -33,10 +34,6 @@ void setup() {
 }
 
 void draw() {
-  fill(127, 127, 255);
-  rect(0, height * 0.85, width, height * 0.15);
-  fill(255, 255, 255);
-  text("Framerate: " + Math.round(frameRate) + " fps", height * 0.1, height * 0.9);
   if (menuPage == 0) {
     if (moveTime > 0) {
       moveTime -= (int) (1000 / frameRate);
@@ -140,6 +137,11 @@ void startMove(int addX, int addY, Box boxThere) {
   moveAddX = addX;
   moveAddY = addY;
   moveBox = boxThere;
+  totMoves++;
+  fill(127, 127, 255);
+  rect(0, height * 0.85, width, height * 0.15);
+  fill(255, 255, 255);
+  text("Moves: " + totMoves, height * 0.1, height * 0.9);
 }
 
 void finishMove(int addX, int addY, Box boxThere) {
@@ -213,6 +215,14 @@ void drawLevel() {
       drawTile(i, j);
     }
   }
+  drawMoveCount();
+}
+
+void drawMoveCount () {
+  fill(127, 127, 255);
+  rect(0, height * 0.85, width, height * 0.15);
+  fill(255, 255, 255);
+  text("Moves: " + totMoves, height * 0.1, height * 0.9);
 }
 
 void drawTile(int x, int y) {
