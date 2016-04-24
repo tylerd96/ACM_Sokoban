@@ -14,6 +14,7 @@ PImage boxImage;
 int originX;
 int originY;
 int tileSize;
+int totMoves;
 
 int playerX = 2;
 int playerY = 2;
@@ -119,7 +120,7 @@ void draw () {
   fill(127, 127, 255);
   rect(0, height * 0.85, width, height * 0.15);
   fill(255, 255, 255);
-  text("Framerate: " + Math.round(frameRate) + " fps", height * 0.1, height * 0.9);
+  text("Moves: " + totMoves + "", height * 0.1, height * 0.9);
   
   if (menuPage == 0) {
     if (moveTime > 0) {
@@ -172,10 +173,12 @@ void tryToMove(int addX, int addY) {
     int boxThere = levelData.getBoxID(playerX + addX, playerY + addY);
     if (boxThere == -1) { // no box in the way
       startMove(addX, addY, -1);
+      totMoves++;
       //println("normal move");
     }
     else if (levelData.isOpenForBox(playerX + addX * 2, playerY + addY * 2) && !levelData.isBox(playerX + addX * 2, playerY + addY * 2)) { // box in the way, but it can be pushed
       startMove(addX, addY, boxThere);
+      totMoves++;
       //println("box pushing move");
     }
     else { // the box can't be pushed from this angle
