@@ -19,6 +19,7 @@ int moveTime = 0;
 int moveAddX = 0;
 int moveAddY = 0;
 Box moveBox = null;
+int totMoves;
 
 void setup() {
   size(displayWidth,displayHeight);
@@ -33,10 +34,6 @@ void setup() {
 }
 
 void draw() {
-  fill(127, 127, 255);
-  rect(0, height * 0.85, width, height * 0.15);
-  fill(255, 255, 255);
-  text("Framerate: " + Math.round(frameRate) + " fps", height * 0.1, height * 0.9);
   if (menuPage == 0) {
     if (moveTime > 0) {
       moveTime -= (int) (1000 / frameRate);
@@ -140,16 +137,23 @@ void startMove(int addX, int addY, Box boxThere) {
   moveAddX = addX;
   moveAddY = addY;
   moveBox = boxThere;
+  totMoves++;
+  fill(127, 127, 255);
+  rect(0, height * 0.85, width, height * 0.15);
+  fill(255, 255, 255);
+  text("Moves: " + totMoves, height * 0.1, height * 0.9);
 }
 
 void finishMove(int addX, int addY, Box boxThere) {
   player.move(player.getRow() + addX, player.getCol() + addY);
   interact(getBlock(player.getRow(), player.getCol()), false);
+  if (menuPage == 3) // stop processing gameplay if the level has been completed
+    return;
   if (boxThere != null) {
-    interact(getBlock(player.getCol() + addY, player.getRow() + addX), true);
     boxThere.move(player.getCol() + addY, player.getRow() + addX);
-    getBlock(player.getRow() + addX, player.getCol() + addY).addItem(boxThere);
-    drawTile(boxThere.getRow(), boxThere.getCol());
+    getBlock(boxThere.getCol(), boxThere.getRow()).addItem(boxThere);
+    interact(getBlock(boxThere.getCol(), boxThere.getRow()), true);
+    drawTile(boxThere.getCol(), boxThere.getRow());
   }
   drawTile(player.getRow(), player.getCol());
   
@@ -158,6 +162,12 @@ void finishMove(int addX, int addY, Box boxThere) {
 }
 
 void interact(MapBlock space, boolean isBox) {
+  if (space.isPit) {
+    space.isPit = false;
+    space.picture = loadImage("tile22.png");
+    space.allowVisitors = true;
+    space.removeItem(space.getBox());
+  }
   for (Item it : space.items) {
     if (it instanceof Switch) {
       Switch sw = (Switch) it;
@@ -205,6 +215,14 @@ void drawLevel() {
       drawTile(i, j);
     }
   }
+  drawMoveCount();
+}
+
+void drawMoveCount () {
+  fill(127, 127, 255);
+  rect(0, height * 0.85, width, height * 0.15);
+  fill(255, 255, 255);
+  text("Moves: " + totMoves, height * 0.1, height * 0.9);
 }
 
 void drawTile(int x, int y) {

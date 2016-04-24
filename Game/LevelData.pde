@@ -14,10 +14,10 @@ public class LevelData {
     try{
       in = new Scanner(new File(dataPath("singlePlayerLevels.txt")));
   }catch(Exception e){
-    print(e); //<>// //<>//
+    print(e); //<>// //<>// //<>//
   }
 }
-  MapBlock[][] loadNewLevel() { //<>//
+  MapBlock[][] loadNewLevel() { //<>// //<>//
     MapBlock[][] blocks = new MapBlock[10][10];
     offSwitches = new int[4];
     gates = new ArrayList[4];
@@ -92,6 +92,11 @@ public class LevelData {
                mb.addItem(new Gate(i,j,GateColor.YELLOW,"tile20.png"));
                gates[GateColor.YELLOW].add(mb); return mb;
       case 21: return new MapBlock(i,j,"tile21.png",false,true);
+      case 23: return new MapBlock(i,j,"tile23.png",false,false);
+      case 24: return new MapBlock(i,j,"tile24.png",false,false);
+      case 25: return new MapBlock(i,j,"tile25.png",false,false);
+      case 26: return new MapBlock(i,j,"tile26.png",false,false);
+      case 27: return new MapBlock(i,j,"tile27.png",false,false);
     }
     return null;
   }
