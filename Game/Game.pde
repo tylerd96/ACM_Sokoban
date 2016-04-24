@@ -145,11 +145,13 @@ void startMove(int addX, int addY, Box boxThere) {
 void finishMove(int addX, int addY, Box boxThere) {
   player.move(player.getRow() + addX, player.getCol() + addY);
   interact(getBlock(player.getRow(), player.getCol()), false);
+  if (menuPage == 3) // stop processing gameplay if the level has been completed
+    return;
   if (boxThere != null) {
-    interact(getBlock(player.getCol() + addY, player.getRow() + addX), true);
     boxThere.move(player.getCol() + addY, player.getRow() + addX);
-    getBlock(player.getRow() + addX, player.getCol() + addY).addItem(boxThere);
-    drawTile(boxThere.getRow(), boxThere.getCol());
+    getBlock(boxThere.getCol(), boxThere.getRow()).addItem(boxThere);
+    interact(getBlock(boxThere.getCol(), boxThere.getRow()), true);
+    drawTile(boxThere.getCol(), boxThere.getRow());
   }
   drawTile(player.getRow(), player.getCol());
   
@@ -158,6 +160,12 @@ void finishMove(int addX, int addY, Box boxThere) {
 }
 
 void interact(MapBlock space, boolean isBox) {
+  if (space.isPit) {
+    space.isPit = false;
+    space.picture = loadImage("tile22.png");
+    space.allowVisitors = true;
+    space.removeItem(space.getBox());
+  }
   for (Item it : space.items) {
     if (it instanceof Switch) {
       Switch sw = (Switch) it;
