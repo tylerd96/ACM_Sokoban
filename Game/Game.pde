@@ -22,6 +22,8 @@ int moveAddY = 0;
 Box moveBox = null;
 int totMoves;
 
+int selectedOption = 0; // for reset menu
+
 void setup() {
   size(displayWidth,displayHeight);
   frameRate(60);
@@ -77,32 +79,58 @@ void drawBox(Box box, int offsetX, int offsetY) { // used only for a box that is
 void drawMenu(int drawPage) {
   background(127, 127, 255);
   textSize(height / 20);
+  textAlign(CENTER);
   switch (drawPage) {
     case 0: // in game
       drawLevel();
       drawPlayer();
       fill(0, 0, 0);
+      textAlign(LEFT);
       text("Level " + (levelIndex + 1), 20, height / 20);
       break;
     case 1: // main menu
       fill(0, 0, 0);
-      text("ACM Grid Game - Main Menu", (width - textWidth("ACM Grid Game - Main Menu")) / 2, height / 3);
-      text("New game: SPACE", (width - textWidth("New game: SPACE")) / 2, 2 * height / 3);
+      text("Welcome to (NAME)", 0, height / 10, width, height);
+      textSize(height / 30);
+      textAlign(LEFT);
+      text("Instructions:", width / 10, height / 4);
+      text("1. The colored switches will toggle open the gate color they match up with.\n"
+           + "2. Boxes can be pushed into open pits to allow you to walk over them.\n"
+           + "3. Remember to check under boxes for hidden switches.\n"
+           + "4. Try to get to the finish in the lowest number of moves.\n"
+           + "5. Press R to reset a level, or to give up at your current score.", width / 9, height * 0.3, 7 * width / 9, height);
+      textSize(height / 20);
+      textAlign(CENTER);
+      text("Press SPACE to continue", 0, 4 * height / 5, width, height);
       break;
     case 2: // level reset
       fill(0, 0, 0);
-      text("Reset level?", (width - textWidth("Reset level?")) / 2, height * 0.25);
-      text("Reset: SPACE", (width - textWidth("Reset: SPACE")) / 2, height * 0.5);
-      text("Cancel: BACKSPACE", (width - textWidth("Cancel: BACKSPACE")) / 2, height * 0.75);
+      textAlign(LEFT);
+      float textX = (width - textWidth("Resume game")) / 2;
+      float selectSub = textWidth("> ");
+      text((selectedOption == 0 ? "> " : "") + "Resume game", textX - (selectedOption == 0 ? selectSub : 0), height * 0.4);
+      text((selectedOption == 1 ? "> " : "") + "Reset level", textX - (selectedOption == 1 ? selectSub : 0), 19 * height / 40);
+      text((selectedOption == 2 ? "> " : "") + "End game", textX - (selectedOption == 2 ? selectSub : 0), 11 * height / 20);
       break;
     case 3: // level complete
-      text("Level complete!", (width - textWidth("Level complete!")) / 2, height / 3);
-      text("Next level: SPACE", (width - textWidth("Next level: SPACE")) / 2, 2 * height / 3);
+      fill(0, 0, 0);
+      text("Level complete!", 0, 37 * height / 120, width, height);
+      text("Next level: SPACE", 0, 77 * height / 120, width, 2 * height);
       break;
     case 4: // game won
-      text("You won!", (width - textWidth("You won!")) / 2, height * 0.25);
-      text("You solved the puzzles in a total of " + totMoves + " moves.", (width - textWidth("You solved the puzzles in a total of " + totMoves + " moves.")) / 2, height * 0.5);
-      text("To menu: SPACE", (width - textWidth("To menu: SPACE")) / 2, height * 0.75);
+      fill(0, 0, 0);
+      text("You won!", 0, 9 * height / 40, width, height);
+      text("You solved all the puzzles in a total of " + totMoves + " moves.", 0, 19 * height / 40, width, height);
+      text("To menu: SPACE", 0, 29 * height / 40, width, height);
+      totMoves = 0;
+      levelData.closeScanner();
+      levelData = new LevelData();
+      levelIndex = -1;
+    case 5: // game ended
+      fill(0, 0, 0);
+      text("Game ended!", 0, 9 * height / 40, width, height);
+      text("You solved " + levelIndex + " puzzle" + (levelIndex == 1 ? "" : "s") + " in " + totMoves + " moves.", 0, 19 * height / 40, width, height);
+      text("To menu: SPACE", 0, 29 * height / 40, width, height);
       totMoves = 0;
       levelData.closeScanner();
       levelData = new LevelData();
@@ -117,7 +145,7 @@ void checkInput() {
       case MOVE_DOWN:    tryMove(1,0);     break;
       case MOVE_LEFT:    tryMove(0,-1);     break;
       case MOVE_RIGHT:   tryMove(0,1);     break;
-      case RESET_LEVEL:  drawMenu(2);   break;
+      case RESET_LEVEL:  selectedOption = 0; drawMenu(2);   break;
     }
   }
 }
@@ -147,10 +175,7 @@ void startMove(int addX, int addY, Box boxThere) {
   moveAddY = addY;
   moveBox = boxThere;
   totMoves++;
-  fill(127, 127, 255);
-  rect(0, height * 0.85, width, height * 0.15);
-  fill(255, 255, 255);
-  text("Moves: " + totMoves, height * 0.1, height * 0.9);
+  drawMoveCount();
 }
 
 void finishMove(int addX, int addY, Box boxThere) {
@@ -234,8 +259,9 @@ void drawLevel() {
 void drawMoveCount () {
   fill(127, 127, 255);
   rect(0, height * 0.85, width, height * 0.15);
-  fill(255, 255, 255);
-  text("Moves: " + totMoves, height * 0.1, height * 0.9);
+  fill(0, 0, 0);
+  textAlign(LEFT);
+  text("Moves: " + totMoves, width * 0.05, height * 0.9);
 }
 
 void drawTile(int x, int y) {
@@ -260,14 +286,25 @@ void keyPressed() {
       break;
     case 2:
       if (key == NEXT) {
-        blocks = levelData.resetLevel();
-        drawMenu(0);
-      } else if (key == BACK) {
-        drawMenu(0);
+        if (selectedOption == 0)
+          drawMenu(0);
+        else if (selectedOption == 1) {
+          blocks = levelData.resetLevel();
+          drawMenu(0);
+        } else {
+          drawMenu(5);
+        }
+      } else if (key == MOVE_RIGHT || key == MOVE_DOWN) {
+        selectedOption = (selectedOption + 1) % 3;
+        drawMenu(2);
+      } else if (key == MOVE_LEFT || key == MOVE_UP) {
+        selectedOption = (selectedOption + 2) % 3;
+        drawMenu(2);
       }
       break;
-    case 4:
+    case 4: case 5:
       if (key == NEXT)
         drawMenu(1);
+      break;
   }
 }
