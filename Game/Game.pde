@@ -126,6 +126,7 @@ void drawMenu(int drawPage) {
       levelData.closeScanner();
       levelData = new LevelData();
       levelIndex = -1;
+      break;
     case 5: // game ended
       fill(0, 0, 0);
       text("Game ended!", 0, 9 * height / 40, width, height);
@@ -135,6 +136,7 @@ void drawMenu(int drawPage) {
       levelData.closeScanner();
       levelData = new LevelData();
       levelIndex = -1;
+      break;
   }
   menuPage = drawPage;
 }
