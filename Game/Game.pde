@@ -1,6 +1,7 @@
 byte[][] currentLevel;
 MapBlock[][] blocks;
 int playerX,playerY,levelIndex=-1, menuPage=1;
+final int N_LEVELS = 1;
 MapBlock[] tiles;
 LevelData levelData;
 Player player;
@@ -77,27 +78,35 @@ void drawMenu(int drawPage) {
   background(127, 127, 255);
   textSize(height / 20);
   switch (drawPage) {
-    case 0:
+    case 0: // in game
       drawLevel();
       drawPlayer();
       fill(0, 0, 0);
       text("Level " + (levelIndex + 1), 20, height / 20);
       break;
-    case 1:
+    case 1: // main menu
       fill(0, 0, 0);
       text("ACM Grid Game - Main Menu", (width - textWidth("ACM Grid Game - Main Menu")) / 2, height / 3);
       text("New game: SPACE", (width - textWidth("New game: SPACE")) / 2, 2 * height / 3);
       break;
-    case 2:
+    case 2: // level reset
       fill(0, 0, 0);
       text("Reset level?", (width - textWidth("Reset level?")) / 2, height * 0.25);
       text("Reset: SPACE", (width - textWidth("Reset: SPACE")) / 2, height * 0.5);
       text("Cancel: BACKSPACE", (width - textWidth("Cancel: BACKSPACE")) / 2, height * 0.75);
       break;
-    case 3:
+    case 3: // level complete
       text("Level complete!", (width - textWidth("Level complete!")) / 2, height / 3);
       text("Next level: SPACE", (width - textWidth("Next level: SPACE")) / 2, 2 * height / 3);
       break;
+    case 4: // game won
+      text("You won!", (width - textWidth("You won!")) / 2, height * 0.25);
+      text("You solved the puzzles in a total of " + totMoves + " moves.", (width - textWidth("You solved the puzzles in a total of " + totMoves + " moves.")) / 2, height * 0.5);
+      text("To menu: SPACE", (width - textWidth("To menu: SPACE")) / 2, height * 0.75);
+      totMoves = 0;
+      levelData.closeScanner();
+      levelData = new LevelData();
+      levelIndex = -1;
   }
   menuPage = drawPage;
 }
@@ -147,7 +156,7 @@ void startMove(int addX, int addY, Box boxThere) {
 void finishMove(int addX, int addY, Box boxThere) {
   player.move(player.getRow() + addX, player.getCol() + addY);
   interact(getBlock(player.getRow(), player.getCol()), false);
-  if (menuPage == 3) // stop processing gameplay if the level has been completed
+  if (menuPage >= 3) // stop processing gameplay if the level has been completed
     return;
   if (boxThere != null) {
     boxThere.move(player.getCol() + addY, player.getRow() + addX);
@@ -184,8 +193,12 @@ void interact(MapBlock space, boolean isBox) {
         sw.setPicture("tile" + (5 + 2 * c) + ".png");
       }
     } else if (it instanceof Finish)
-      if (!isBox)
-        drawMenu(3);
+      if (!isBox) {
+        //if (levelIndex >= N_LEVELS - 1)
+          drawMenu(4);
+        //else
+          //drawMenu(3);
+      }
   }
 }
 
@@ -253,5 +266,8 @@ void keyPressed() {
         drawMenu(0);
       }
       break;
+    case 4:
+      if (key == NEXT)
+        drawMenu(1);
   }
 }

@@ -136,6 +136,10 @@ public class LevelData {
   Player getPlayer() {
     return player;
   }
+  
+  void closeScanner() {
+    in.close();
+  }
 
 
 
