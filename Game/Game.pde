@@ -1,7 +1,7 @@
 byte[][] currentLevel;
 MapBlock[][] blocks;
 int playerX,playerY,levelIndex=-1, menuPage=1;
-final int N_LEVELS = 1;
+final int N_LEVELS = 8;
 MapBlock[] tiles;
 LevelData levelData;
 Player player;
@@ -194,10 +194,10 @@ void interact(MapBlock space, boolean isBox) {
       }
     } else if (it instanceof Finish)
       if (!isBox) {
-        //if (levelIndex >= N_LEVELS - 1)
+        if (levelIndex >= N_LEVELS - 1)
           drawMenu(4);
-        //else
-          //drawMenu(3);
+        else
+          drawMenu(3);
       }
   }
 }
