@@ -1,7 +1,7 @@
 byte[][] currentLevel;
 MapBlock[][] blocks;
 int playerX,playerY,levelIndex=-1, menuPage=1;
-final int N_LEVELS = 8;
+final int N_LEVELS = 10;
 MapBlock[] tiles;
 LevelData levelData;
 Player player;
